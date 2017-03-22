@@ -8,4 +8,5 @@ log
 .env
 .idea
 .editorconfig
-www
+www/bundle.js
+www/bundle.js.map

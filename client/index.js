@@ -1,9 +1,9 @@
 
-import 'babel/polyfill'
 import React from 'react'
-import App from './containers/App.react'
+import ReactDOM from 'react-dom'
+import App from './Components/App'
 
-React.render(
+ReactDOM.render(
     <App />,
     document.getElementById('app')
 )
