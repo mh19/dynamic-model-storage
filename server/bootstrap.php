@@ -47,16 +47,16 @@ $route->map('GET', '/items', function (ServerRequestInterface $request, Response
 });
 $route->map('GET', '/items/{param}-{type}-{value}', function (ServerRequestInterface $request, ResponseInterface $response, array $args) {
     $rule = null;
-
+    $valueType = is_numeric($args['value']) ? 'i' : 's';
     switch ($args['type']) {
         case 'equal':
-            $rule = "`props`->'$.".$args['param']."' = %s";
+            $rule = "`props`->'$.".$args['param']."' = %{$valueType}";
             break;
         case 'bigger':
-            $rule = "`props`->'$.".$args['param']."' > %i";
+            $rule = "`props`->'$.".$args['param']."' > %{$valueType}";
             break;
         case 'less':
-            $rule = "`props`->'$.".$args['param']."' < %i";
+            $rule = "`props`->'$.".$args['param']."' < %{$valueType}";
             break;
         case 'contains':
             $rule = "`props`->'$.".$args['param']."' LIKE %~like~";
@@ -65,19 +65,17 @@ $route->map('GET', '/items/{param}-{type}-{value}', function (ServerRequestInter
             exit;
     }
 
-    /*
-    dibi::test('
+    /*dibi::test('
         SELECT *
         FROM `items`
-        WHERE '.($rule ?: '1').'
+        WHERE ('.($rule ?: '1').')
         ORDER BY `id`
-    ', $args['value']);exit;
-    */
+    ', $args['value']);exit;*/
 
     $items = dibi::fetchAll('
         SELECT *
         FROM `items`
-        WHERE '.($rule ?: '1').'
+        WHERE ('.($rule ?: '1').')
         ORDER BY `id`
     ', $args['value']);
     $response->getBody()->write(json_encode($items));
